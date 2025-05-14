@@ -1,40 +1,48 @@
 package com.example.book_service.Controller;
 
 import com.example.book_service.model.Book;
-import com.example.book_service.Repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.book_service.service.BookService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
+@CrossOrigin(origins = "*")
 public class BookController {
-    @Autowired
-    private BookRepository repository;
+
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return repository.save(book);
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        return ResponseEntity.ok(bookService.createBook(book));
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return repository.findAll();
+    public ResponseEntity<List<Book>> getAllBooks() {
+        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
     @GetMapping("/{isbn}")
-    public Book getBook(@PathVariable String isbn) {
-        return repository.findById(isbn).orElse(null);
+    public ResponseEntity<Book> getBook(@PathVariable String isbn) {
+        Book book = bookService.getBookByIsbn(isbn);
+        return (book != null) ? ResponseEntity.ok(book) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{isbn}")
-    public Book updateBook(@PathVariable String isbn, @RequestBody Book book) {
-        book.setIsbn(isbn);
-        return repository.save(book);
+    public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book book) {
+        Book updated = bookService.updateBook(isbn, book);
+        return (updated != null) ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{isbn}")
-    public void deleteBook(@PathVariable String isbn) {
-        repository.deleteById(isbn);
+    public ResponseEntity<Void> deleteBook(@PathVariable String isbn) {
+        bookService.deleteBook(isbn);
+        return ResponseEntity.noContent().build();
     }
 }
