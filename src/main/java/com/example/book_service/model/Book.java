@@ -18,4 +18,7 @@ public class Book {
     private String title;
 
     private String author;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 }
