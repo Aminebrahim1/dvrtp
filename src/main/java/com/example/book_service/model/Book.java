@@ -1,4 +1,4 @@
-package com.example.book_service.model; // <-- ajuste ce package selon ton projet
+package com.example.book_service.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,18 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+@Data // <--- ajoute cette annotation si ce n'est pas encore fait
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book {
-
     @Id
     private String isbn;
-
     private String title;
-
     private String author;
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
 }
